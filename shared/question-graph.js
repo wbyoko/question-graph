@@ -240,10 +240,62 @@ class QuestionGraph {
   }
 
   //bfs to find possible results / return the impossible results as well
-  getPossibleResults(data) {}
+  getPossibleResultsIds(data = {}) {
+    let vis = new Set();
+    let resultIds = new Set();
+    let q = [this.head];
 
-  //bfs to find possible results / return the impossible results as well
-  getImpossibleResults(data) {}
+    while (q.length) {
+      const item = q.shift();
+      if (!vis.has(item.id)) {
+        vis.add(item.id);
+
+        // check if result
+        if (item.data && !isString(item.data)) {
+          const resultId = item.id;
+          resultIds.add(resultId);
+        }
+
+        for (const edge of item.edges) {
+          const edgeRes = edge.question(data);
+
+          // allow possibles
+          if (edgeRes !== false) {
+            q.push(this.nodeMap.get(edge.toId));
+          }
+        }
+      }
+    }
+
+    return Array.from(resultIds);
+  }
+
+  //bfs to find possible results
+  getPossibleResults(data = {}) {
+    const possibleResultIds = this.getPossibleResultsIds(data);
+    return possibleResultIds.map((resultId) => {
+      const result = this.nodeMap.get(resultId);
+      return { resultId, result };
+    });
+  }
+
+  //bfs to find the impossible results
+  getImpossibleResults(data = {}) {
+    let res = [];
+
+    const impossibleResultIds = [];
+    const possibleResultIds = new Set(this.getPossibleResultsIds(data));
+    for (const resultId of this.resultIds) {
+      if (!possibleResultIds.has(resultId)) {
+        impossibleResultIds.push(resultId);
+      }
+    }
+
+    return impossibleResultIds.map((resultId) => {
+      const result = this.nodeMap.get(resultId);
+      return { resultId, result };
+    });
+  }
 }
 
 module.exports = { QuestionGraph };
