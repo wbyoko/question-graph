@@ -176,7 +176,7 @@ class QuestionGraph {
         // check if submittable question
         if (item.data && isString(item.data)) {
           const questionId = item.data;
-          if (!data[questionId]) {
+          if (data[questionId] == null) {
             const question = this.questionMap.get(questionId);
             return {
               questionId,
@@ -211,7 +211,7 @@ class QuestionGraph {
         // check if submittable question
         if (item.data && isString(item.data)) {
           const questionId = item.data;
-          if (!data[questionId]) {
+          if (data[questionId] == null) {
             questionIds.add(questionId);
           }
         }
