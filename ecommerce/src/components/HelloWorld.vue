@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
-    <div v-if="currentQuestion">
+    <div
+      v-for="(currentQuestion, questionIndex) in remainingQuestions"
+      :key="currentQuestion.questionId"
+    >
       {{ currentQuestion.question.question }}
       <div v-if="currentQuestion.question.choice">
         <div
@@ -9,7 +12,7 @@
         >
           <input
             type="radio"
-            :id="'radio-' + index"
+            :id="'radio-' + questionIndex + '-' + index"
             @click="addAnswer(currentQuestion.questionId, choice)"
           />
           <label :for="'radio-' + index">{{ choice }}</label>
@@ -19,21 +22,22 @@
       <div v-else>
         <input
           type="radio"
-          id="radio-yes"
+          :id="'radio-' + questionIndex + '-yes'"
           @click="addAnswer(currentQuestion.questionId, true)"
         />
-        <label for="radio-yes">Yes</label>
+        <label :for="'radio-' + questionIndex + '-yes'">Yes</label>
         <br />
         <input
           type="radio"
-          id="radio-no"
+          :id="'radio-' + questionIndex + '-yes'"
           @click="addAnswer(currentQuestion.questionId, false)"
         />
-        <label for="radio-no">No</label>
+        <label :for="'radio-' + questionIndex + '-no'">No</label>
         <br />
       </div>
     </div>
-    <div v-else>
+
+    <div>
       <ul v-if="possibleResults.length">
         <li v-for="result in possibleResults" :key="result.resultId">
           {{ result.result.data.label }}
@@ -42,10 +46,6 @@
       <div v-else>
         No have no results
       </div>
-    </div>
-
-    <div v-if="insertionOrder.length">
-      <button @click="goBack()">Step Back</button>
     </div>
   </div>
 </template>
@@ -59,8 +59,6 @@ export default {
     return {
       data: {},
       loading: true,
-      // currentQuestion: demoGraph.getNextQuestion(),
-      // possibleResults: demoGraph.getPossibleResults(),
       insertionOrder: [],
     };
   },
@@ -69,8 +67,8 @@ export default {
   },
 
   computed: {
-    currentQuestion: function() {
-      return demoGraph.getNextQuestion(this.data);
+    remainingQuestions: function() {
+      return demoGraph.getRemainingQuestions(this.data);
     },
     possibleResults: function() {
       return demoGraph.getPossibleResults(this.data);
