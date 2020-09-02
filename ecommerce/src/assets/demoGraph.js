@@ -22,7 +22,6 @@ demoGraph.addQuestion(
     choice: ["Sushi", "Wine", "Candy", "Steak"],
     noneChoice: true
   },
-  ADD_AS_VERTEX
 );
 
 demoGraph.addQuestion(
@@ -87,23 +86,40 @@ demoGraph.addResult("woah", {
 
 // demoGraph.addVertex("playSports", "playSports");
 
-demoGraph.addEdge("age", "food");
+demoGraph.addVertex("food_1", "food");
+demoGraph.addVertex("food_2", "food");
+demoGraph.addVertex("food_3", "food");
 
-demoGraph.addEdge("food", "woah", ({ age, food }) => {
-  if (age != null && food != null) {
-    return age <= 18 && food["Wine"];
+demoGraph.addEdge("age", "food_1", ({ age }) => {
+  if (age != null) {
+    return age <= 18;
+  }
+});
+demoGraph.addEdge("age", "food_2", ({ age }) => {
+  if (age != null) {
+    return age >= 65;
   }
 });
 
-demoGraph.addEdge("food", "woah", ({ age, food }) => {
-  if (age != null && food != null) {
-    return age >= 65 && food["Candy"];
-  }
-});
-
-demoGraph.addEdge("food", "livingLife", ({ food }) => {
+demoGraph.addEdge("food_1", "woah", ({ food }) => {
   if (food != null) {
-    return Object.keys(food).length > 1;
+    return food["Wine"];
+  }
+});
+
+demoGraph.addEdge("food_2", "woah", ({ food }) => {
+  if (food != null) {
+    return food["Candy"];
+  }
+});
+
+demoGraph.addEdge("food_3", "livingLife", ({ food }) => {
+  if (food != null) {
+    let count = 0;
+    for (const entry of food) {
+      if (entry[1]) count++;
+    }
+    return count > 1;
   }
 });
 
