@@ -3,6 +3,55 @@
     <div class="grid-row">
       <div class="grid-col-4">
         <h2>Questions</h2>
+        <div
+          v-for="(currentQuestion, questionIndex) in completedQuestions"
+          :key="currentQuestion.questionId"
+        >
+          {{ currentQuestion.question }}
+          <div v-if="currentQuestion.choice">
+            <div class="usa-radio" v-for="(choice, index) in currentQuestion.choice" :key="choice">
+              <input
+                class="usa-radio__input"
+                type="radio"
+                :id="'completed--questions-radio-' + questionIndex + '-' + index"
+                :checked="data[currentQuestion.questionId] === choice"
+                @click="addAnswer(currentQuestion.questionId, choice)"
+              />
+              <label
+                class="usa-radio__label"
+                :for="'completed--questions-radio-' + questionIndex + '-' + index"
+              >{{ choice }}</label>
+            </div>
+          </div>
+          <div v-else>
+            <div class="usa-radio">
+              <input
+                class="usa-radio__input"
+                type="radio"
+                :id="'completed--questions-radio-' + questionIndex + '-yes'"
+                :checked="data[currentQuestion.questionId] === true"
+                @click="addAnswer(currentQuestion.questionId, true)"
+              />
+              <label
+                class="usa-radio__label"
+                :for="'completed--questions-radio-' + questionIndex + '-yes'"
+              >Yes</label>
+            </div>
+            <div class="usa-radio">
+              <input
+                class="usa-radio__input"
+                type="radio"
+                :checked="data[currentQuestion.questionId] === false"
+                :id="'completed--questions-radio-' + questionIndex + '-no'"
+                @click="addAnswer(currentQuestion.questionId, false)"
+              />
+              <label
+                class="usa-radio__label"
+                :for="'completed--questions-radio-' + questionIndex + '-no'"
+              >No</label>
+            </div>
+          </div>
+        </div>
 
         <div
           v-for="(currentQuestion, questionIndex) in remainingQuestions"
@@ -18,12 +67,12 @@
               <input
                 class="usa-radio__input"
                 type="radio"
-                :id="'radio-' + questionIndex + '-' + index"
+                :id="'remainingQuestions-radio-' + questionIndex + '-' + index"
                 @click="addAnswer(currentQuestion.questionId, choice)"
               />
               <label
                 class="usa-radio__label"
-                :for="'radio-' + questionIndex + '-' + index"
+                :for="'remainingQuestions-radio-' + questionIndex + '-' + index"
               >{{ choice }}</label>
             </div>
           </div>
@@ -32,19 +81,25 @@
               <input
                 class="usa-radio__input"
                 type="radio"
-                :id="'radio-' + questionIndex + '-yes'"
+                :id="'remainingQuestions-radio-' + questionIndex + '-yes'"
                 @click="addAnswer(currentQuestion.questionId, true)"
               />
-              <label class="usa-radio__label" :for="'radio-' + questionIndex + '-yes'">Yes</label>
+              <label
+                class="usa-radio__label"
+                :for="'remainingQuestions-radio-' + questionIndex + '-yes'"
+              >Yes</label>
             </div>
             <div class="usa-radio">
               <input
                 class="usa-radio__input"
                 type="radio"
-                :id="'radio-' + questionIndex + '-yes'"
+                :id="'remainingQuestions-radio-' + questionIndex + '-no'"
                 @click="addAnswer(currentQuestion.questionId, false)"
               />
-              <label class="usa-radio__label" :for="'radio-' + questionIndex + '-no'">No</label>
+              <label
+                class="usa-radio__label"
+                :for="'remainingQuestions-radio-' + questionIndex + '-no'"
+              >No</label>
             </div>
           </div>
         </div>
