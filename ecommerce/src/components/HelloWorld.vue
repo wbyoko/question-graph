@@ -65,7 +65,35 @@
           :key="currentQuestion.questionId"
         >
           {{ currentQuestion.question.question }}
-          <div v-if="currentQuestion.question.choice">
+          <div v-if="currentQuestion.question.type === 'number'">
+            <input
+              class="usa-input margin-y-05"
+              type="text"
+              v-model.number="ui[currentQuestion.questionId]"
+              :id="'remainingQuestions-checkbox-' + currentQuestion.questionId"
+            />
+            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId)">Update</button>
+          </div>
+          <div v-else-if="currentQuestion.question.type === 'multi-choice'">
+            <div
+              class="usa-checkbox"
+              v-for="(choice, index) in currentQuestion.question.choice"
+              :key="choice"
+            >
+              <input
+                class="usa-checkbox__input"
+                type="checkbox"
+                @click="toggleData(currentQuestion.questionId, choice)"
+                :id="'remainingQuestions-checkbox-' + questionIndex + '-' + index"
+              />
+              <label
+                class="usa-checkbox__label"
+                :for="'remainingQuestions-checkbox-' + questionIndex + '-' + index"
+              >{{ choice }}</label>
+            </div>
+            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId)">Update</button>
+          </div>
+          <div v-else-if="currentQuestion.question.type === 'choice'">
             <div
               class="usa-radio"
               v-for="(choice, index) in currentQuestion.question.choice"
@@ -148,6 +176,7 @@ export default {
   name: "HelloWorld",
   data() {
     return {
+      ui: {},
       data: {},
       loading: true,
       insertionOrder: [],
@@ -177,18 +206,27 @@ export default {
     clearAnswer: function (questionId) {
       const newData = { ...this.data };
       delete newData[questionId];
+      delete this.ui[questionId];
       this.data = newData;
       const found = this.insertionOrder.indexOf(questionId);
       if (found !== -1) {
         this.insertionOrder = this.insertionOrder.slice(found, 1);
       }
     },
+    updateAnswer: function (questionId) {
+      const answer = this.ui[questionId];
+      this.clearAnswer(questionId);
+      this.addAnswer(questionId, answer);
+    },
+    toggleData: function (questionId, choice) {
+      this.ui[questionId] = this.ui[questionId] || {};
+      this.ui[questionId][choice] = !this.ui[questionId][choice];
+      this.ui = { ...this.ui };
+    },
     goBack: function () {
       if (this.insertionOrder.length) {
         const questionId = this.insertionOrder.pop();
-        const newData = { ...this.data };
-        delete newData[questionId];
-        this.data = newData;
+        this.clearAnswer(questionId);
       }
     },
   },

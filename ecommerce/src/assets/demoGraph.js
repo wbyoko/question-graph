@@ -8,14 +8,37 @@ demoGraph.addQuestion(
   "schooling",
   {
     question: "What level of schooling have you completed?",
+    type: "choice",
     choice: ["High School", "College", "PhD", "None"]
   },
   ADD_AS_VERTEX
 );
 
 demoGraph.addQuestion(
+  "food",
+  {
+    question: "Which of these foods consume regularly (Click all that apply)?",
+    type: "multi-choice",
+    choice: ["Sushi", "Wine", "Candy", "Steak"],
+    noneChoice: true
+  },
+  ADD_AS_VERTEX
+);
+
+demoGraph.addQuestion(
+  "age",
+  {
+    question: "How old are you?",
+    type: "number",
+  },
+  ADD_AS_VERTEX
+);
+
+
+demoGraph.addQuestion(
   "inCollege",
   {
+    type: "yes/no",
     question: "Are you currently in college?"
   },
   ADD_AS_VERTEX
@@ -24,6 +47,7 @@ demoGraph.addQuestion(
 demoGraph.addQuestion(
   "playSports",
   {
+    type: "yes/no",
     question: "Do you play sports?"
   },
   ADD_AS_VERTEX
@@ -45,11 +69,55 @@ demoGraph.addResult("doctor", {
   label: "Doctor"
 });
 
+demoGraph.addResult("kid", {
+  label: "Kid"
+});
+
+demoGraph.addResult("livingLife", {
+  label: "Living the life"
+});
+
+demoGraph.addResult("woah", {
+  label: "🙀😱"
+});
+
 // demoGraph.addVertex("schooling", "schooling");
 
 // demoGraph.addVertex("inCollege", "inCollege");
 
 // demoGraph.addVertex("playSports", "playSports");
+
+demoGraph.addEdge("age", "food");
+
+demoGraph.addEdge("food", "woah", ({ age, food }) => {
+  if (age != null && food != null) {
+    return age <= 18 && food["Wine"];
+  }
+});
+
+demoGraph.addEdge("food", "woah", ({ age, food }) => {
+  if (age != null && food != null) {
+    return age >= 65 && food["Candy"];
+  }
+});
+
+demoGraph.addEdge("food", "livingLife", ({ food }) => {
+  if (food != null) {
+    return Object.keys(food).length > 1;
+  }
+});
+
+demoGraph.addEdge("age", "schooling", ({ age }) => {
+  if (age != null) {
+    return age >= 18;
+  }
+});
+
+demoGraph.addEdge("age", "kid", ({ age }) => {
+  if (age != null) {
+    return age < 18;
+  }
+});
 
 demoGraph.addEdge("schooling", "tooCool", ({ schooling }) => {
   if (schooling != null) {
