@@ -4,6 +4,7 @@
       <div class="grid-col-4">
         <h2>Questions</h2>
         <div
+          class="margin-y-2"
           v-for="(currentQuestion, questionIndex) in completedQuestions"
           :key="currentQuestion.questionId"
         >
@@ -51,9 +52,15 @@
               >No</label>
             </div>
           </div>
+
+          <button
+            class="usa-button usa-button--unstyled"
+            @click="clearAnswer(currentQuestion.questionId)"
+          >clear</button>
         </div>
 
         <div
+          class="margin-y-2"
           v-for="(currentQuestion, questionIndex) in remainingQuestions"
           :key="currentQuestion.questionId"
         >
@@ -166,6 +173,15 @@ export default {
       const newData = { ...this.data, [questionId]: answer };
       this.data = newData;
       this.insertionOrder.push(questionId);
+    },
+    clearAnswer: function (questionId) {
+      const newData = { ...this.data };
+      delete newData[questionId];
+      this.data = newData;
+      const found = this.insertionOrder.indexOf(questionId);
+      if (found !== -1) {
+        this.insertionOrder = this.insertionOrder.slice(found, 1);
+      }
     },
     goBack: function () {
       if (this.insertionOrder.length) {
