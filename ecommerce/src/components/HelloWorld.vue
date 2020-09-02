@@ -1,50 +1,68 @@
 <template>
-  <div class="hello">
-    <div
-      v-for="(currentQuestion, questionIndex) in remainingQuestions"
-      :key="currentQuestion.questionId"
-    >
-      {{ currentQuestion.question.question }}
-      <div v-if="currentQuestion.question.choice">
+  <div class="grid-container">
+    <div class="grid-row">
+      <div class="grid-col-4">
+        <h2>Questions</h2>
+
         <div
-          v-for="(choice, index) in currentQuestion.question.choice"
-          :key="choice"
+          v-for="(currentQuestion, questionIndex) in remainingQuestions"
+          :key="currentQuestion.questionId"
         >
-          <input
-            type="radio"
-            :id="'radio-' + questionIndex + '-' + index"
-            @click="addAnswer(currentQuestion.questionId, choice)"
-          />
-          <label :for="'radio-' + index">{{ choice }}</label>
-          <br />
+          {{ currentQuestion.question.question }}
+          <div v-if="currentQuestion.question.choice">
+            <div v-for="(choice, index) in currentQuestion.question.choice" :key="choice">
+              <input
+                type="radio"
+                :id="'radio-' + questionIndex + '-' + index"
+                @click="addAnswer(currentQuestion.questionId, choice)"
+              />
+              <label :for="'radio-' + index">{{ choice }}</label>
+              <br />
+            </div>
+          </div>
+          <div v-else>
+            <input
+              type="radio"
+              :id="'radio-' + questionIndex + '-yes'"
+              @click="addAnswer(currentQuestion.questionId, true)"
+            />
+            <label :for="'radio-' + questionIndex + '-yes'">Yes</label>
+            <br />
+            <input
+              type="radio"
+              :id="'radio-' + questionIndex + '-yes'"
+              @click="addAnswer(currentQuestion.questionId, false)"
+            />
+            <label :for="'radio-' + questionIndex + '-no'">No</label>
+            <br />
+          </div>
         </div>
       </div>
-      <div v-else>
-        <input
-          type="radio"
-          :id="'radio-' + questionIndex + '-yes'"
-          @click="addAnswer(currentQuestion.questionId, true)"
-        />
-        <label :for="'radio-' + questionIndex + '-yes'">Yes</label>
-        <br />
-        <input
-          type="radio"
-          :id="'radio-' + questionIndex + '-yes'"
-          @click="addAnswer(currentQuestion.questionId, false)"
-        />
-        <label :for="'radio-' + questionIndex + '-no'">No</label>
-        <br />
-      </div>
-    </div>
+      <div class="grid-col-8">
+        <h2>Benefits</h2>
 
-    <div>
-      <ul v-if="possibleResults.length">
-        <li v-for="result in possibleResults" :key="result.resultId">
-          {{ result.result.data.label }}
-        </li>
-      </ul>
-      <div v-else>
-        No have no results
+        <div>
+          <div v-if="possibleResults.length">
+            <div
+              class="usa-card margin-05"
+              v-for="result in possibleResults"
+              :key="result.resultId"
+            >
+              <div class="usa-card__container">
+                <header class="usa-card__header">
+                  <h2 class="usa-card__heading">{{ result.result.data.label }}</h2>
+                </header>
+                <div class="usa-card__body" v-if="result.result.data.description">
+                  <p>{{ result.result.data.description }}</p>
+                </div>
+                <div class="usa-card__footer" v-if="result.result.data.link">
+                  <button class="usa-button">Visit Florida Keys</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>No have no results</div>
+        </div>
       </div>
     </div>
   </div>
@@ -67,20 +85,23 @@ export default {
   },
 
   computed: {
-    remainingQuestions: function() {
+    remainingQuestions: function () {
       return demoGraph.getRemainingQuestions(this.data);
     },
-    possibleResults: function() {
+    possibleResults: function () {
       return demoGraph.getPossibleResults(this.data);
+    },
+    completedQuestions: function () {
+      return demoGraph.getCompletedQuestions(this.data);
     },
   },
   methods: {
-    addAnswer: function(questionId, answer) {
+    addAnswer: function (questionId, answer) {
       const newData = { ...this.data, [questionId]: answer };
       this.data = newData;
       this.insertionOrder.push(questionId);
     },
-    goBack: function() {
+    goBack: function () {
       if (this.insertionOrder.length) {
         const questionId = this.insertionOrder.pop();
         const newData = { ...this.data };
@@ -93,19 +114,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+<style scoped></style>

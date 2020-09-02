@@ -10,7 +10,7 @@ class Node {
   }
 }
 
-const noop = () => {};
+const noop = () => { };
 class Edge {
   constructor(toId, question) {
     this.toId = toId;
@@ -293,6 +293,20 @@ class QuestionGraph {
       const result = this.nodeMap.get(resultId);
       return { resultId, result };
     });
+  }
+
+  //bfs to find the impossible results
+  getCompletedQuestions(data = {}) {
+    const results = [];
+
+
+    for (const [questionId, question] of this.questionMap) {
+      if (data[questionId] != null) {
+        results.push({ ...question, questionId });
+      }
+    }
+
+    return results;
   }
 }
 
