@@ -10,31 +10,42 @@
         >
           {{ currentQuestion.question.question }}
           <div v-if="currentQuestion.question.choice">
-            <div v-for="(choice, index) in currentQuestion.question.choice" :key="choice">
+            <div
+              class="usa-radio"
+              v-for="(choice, index) in currentQuestion.question.choice"
+              :key="choice"
+            >
               <input
+                class="usa-radio__input"
                 type="radio"
                 :id="'radio-' + questionIndex + '-' + index"
                 @click="addAnswer(currentQuestion.questionId, choice)"
               />
-              <label :for="'radio-' + index">{{ choice }}</label>
-              <br />
+              <label
+                class="usa-radio__label"
+                :for="'radio-' + questionIndex + '-' + index"
+              >{{ choice }}</label>
             </div>
           </div>
           <div v-else>
-            <input
-              type="radio"
-              :id="'radio-' + questionIndex + '-yes'"
-              @click="addAnswer(currentQuestion.questionId, true)"
-            />
-            <label :for="'radio-' + questionIndex + '-yes'">Yes</label>
-            <br />
-            <input
-              type="radio"
-              :id="'radio-' + questionIndex + '-yes'"
-              @click="addAnswer(currentQuestion.questionId, false)"
-            />
-            <label :for="'radio-' + questionIndex + '-no'">No</label>
-            <br />
+            <div class="usa-radio">
+              <input
+                class="usa-radio__input"
+                type="radio"
+                :id="'radio-' + questionIndex + '-yes'"
+                @click="addAnswer(currentQuestion.questionId, true)"
+              />
+              <label class="usa-radio__label" :for="'radio-' + questionIndex + '-yes'">Yes</label>
+            </div>
+            <div class="usa-radio">
+              <input
+                class="usa-radio__input"
+                type="radio"
+                :id="'radio-' + questionIndex + '-yes'"
+                @click="addAnswer(currentQuestion.questionId, false)"
+              />
+              <label class="usa-radio__label" :for="'radio-' + questionIndex + '-no'">No</label>
+            </div>
           </div>
         </div>
       </div>
@@ -44,7 +55,7 @@
         <div>
           <div v-if="possibleResults.length">
             <div
-              class="usa-card margin-05"
+              class="usa-card margin-y-1"
               v-for="result in possibleResults"
               :key="result.resultId"
             >
