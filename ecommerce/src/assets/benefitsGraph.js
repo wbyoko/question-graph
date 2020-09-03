@@ -135,7 +135,7 @@ for (const edge of edgeJson) {
 
             return (data) => {
                 if (data[from.questionId] != null) {
-                    const res = (compiled || noop)(data);
+                    const res = !!(compiled || noop)(data);
                     console.log(from.node.id, from.questionId, edge.when, res)
                     return res;
                 }
