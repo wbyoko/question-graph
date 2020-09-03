@@ -37,11 +37,11 @@ dodSurvivorBenefitPlan,Federal Government,Department of Defense,DOD Survivor Ben
 dodDeathGratuity,Federal Government,Department of Defense,DOD Death Gratuity,https://militarypay.defense.gov/Benefits/Death-Gratuity/`;
 
 const questionsCSV = `identifier,question,type,choices,dependencies
-relationship,What is your relationship to the deceased?,multi-choice,"Parent, Spouse, Divorved Spouse, Parent to Child of the deceased, Child, Other",
+relationship,What is your relationship to the deceased?,multi-choice,"Parent, Spouse, Divorced Spouse, Parent to Child of the deceased, Child, Other",
 work,Was the deceased ever have a job?,yes/no,,
 lineOfDuty,Is the deceased a Service Member who died in the line of duty?,yes/no,,
 veteran,Is the deceased a Veteran who died from a service related injury / illness?,yes/no,,
-publicSafetyOfficer,Is the deceased a first responer / public safety officer?,yes/no,,"relationship = spouse, child"
+publicSafetyOfficer,Is the deceased a first responder / public safety officer?,yes/no,,"relationship = spouse, child"
 age,What is your age as the survivor?,number,,
 dependant,Are you a dependant of the deceased?,yes/no,,relationship = parent
 disabled,Are you disabled?,yes/no,,"relationship = spouse, divorced spouse, child"
@@ -65,12 +65,12 @@ age_spouse,widowersBenefit,age >= 60
 age_spouse,disabled_59-50_spouse,age < 60 && age >= 50
 disabled_59-50_spouse,widowersBenefit,disabled
 relationship,lumpSumBenefit,!!relationship['Spouse'] 
-relationship,caringForChild,!!relationship['Spouse'] || !!relationship['Divorved Spouse'] ||  !!relationship['Parent to Child of the deceased']
+relationship,caringForChild,!!relationship['Spouse'] || !!relationship['Divorced Spouse'] ||  !!relationship['Parent to Child of the deceased']
 caringForChild,unmarried_caringForChild,caringForChild
 unmarried_caringForChild,motherFatherBenefit,unmarried
 relationship,publicSafetyOfficer,!!relationship['Spouse'] 
 publicSafetyOfficer,educationalBenefit,publicSafetyOfficer
-relationship,age_divorcedSpouse, !!relationship['Divorved Spouse']
+relationship,age_divorcedSpouse, !!relationship['Divorced Spouse']
 age_divorcedSpouse,married10Years,age >= 60
 age_divorcedSpouse,disabled_59-50_divorcedSpouse,age < 60 && age >= 50
 disabled_59-50_divorcedSpouse,married10Years,disabled`;
