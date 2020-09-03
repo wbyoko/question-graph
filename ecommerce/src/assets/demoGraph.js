@@ -53,31 +53,31 @@ demoGraph.addQuestion(
 );
 
 demoGraph.addResult("tooCool", {
-  label: "Too Cool For School"
+  name: "Too Cool For School"
 });
 
 demoGraph.addResult("sportyStudent", {
-  label: "Sporty Student"
+  name: "Sporty Student"
 });
 
 demoGraph.addResult("student", {
-  label: "Student"
+  name: "Student"
 });
 
 demoGraph.addResult("doctor", {
-  label: "Doctor"
+  name: "Doctor"
 });
 
 demoGraph.addResult("kid", {
-  label: "Kid"
+  name: "Kid"
 });
 
 demoGraph.addResult("livingLife", {
-  label: "Living the life"
+  name: "Living the life"
 });
 
 demoGraph.addResult("woah", {
-  label: "🙀😱"
+  name: "🙀😱"
 });
 
 // demoGraph.addVertex("schooling", "schooling");

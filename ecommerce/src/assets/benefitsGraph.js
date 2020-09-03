@@ -91,7 +91,7 @@ for (const result of benefitJson) {
 
 for (const question of questionJson) {
     if (question.choices) {
-        question.choice = question.choices.split(',');
+        question.choice = question.choices.split(',').map(s => s.trim());
     }
     benefitsGraph.addQuestion(question.identifier, question);
 }
