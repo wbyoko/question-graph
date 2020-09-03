@@ -35,8 +35,11 @@ class QuestionGraph {
       throw new Error("Graph has been finalized");
     }
 
-    this.nodeMap.set(nodeId, new Node(nodeId, data));
+    const newNode = new Node(nodeId, data)
+    this.nodeMap.set(nodeId, newNode);
     this.headIds.add(nodeId);
+
+    return newNode;
   }
 
   addQuestion(questionId, data, addAsVertex) {
@@ -132,7 +135,13 @@ class QuestionGraph {
       for (const entry of this.questionMap) {
         const key = entry[0];
         if (!found.has(key)) {
-          throw new Error(`Question ${key} is not linked in the graph`);
+          // throw new Error(`Question ${key} is not linked in the graph`);
+          console.warn(`removing question ${key}`);
+          this.questionMap.delete(key);
+          this.headIds.delete(key);
+          this.nodeMap.delete(key);
+          this.resultIds.delete(key);
+          this.nodeIds.delete(key);
         }
       }
 
@@ -148,7 +157,12 @@ class QuestionGraph {
     const noResultsFromHead = () => {
       for (const headId of this.headIds) {
         if (this.resultIds.has(headId)) {
-          throw new Error(`Result ${headId} is not linked through a question`);
+          console.warn(`removing head result ${headId}`);
+          this.questionMap.delete(headId);
+          this.headIds.delete(headId);
+          this.nodeMap.delete(headId);
+          this.resultIds.delete(headId)
+          this.nodeIds.delete(headId)
         }
       }
     };
@@ -208,17 +222,23 @@ class QuestionGraph {
       if (!vis.has(item.id)) {
         vis.add(item.id);
 
+        console.log(item.id)
+
         // check if submittable question
         if (item.data && isString(item.data)) {
           const questionId = item.data;
+
+          console.log(questionId);
           if (data[questionId] == null) {
             questionIds.add(questionId);
           }
         }
 
+        console.log(item);
         for (const edge of item.edges) {
           const edgeRes = edge.question(data);
 
+          console.log(edge.toId, edgeRes);
           // allow possibles
           if (edgeRes !== false) {
             q.push(this.nodeMap.get(edge.toId));
@@ -227,6 +247,7 @@ class QuestionGraph {
       }
     }
 
+    console.log('what questions', questionIds);
     let res = [];
     for (const questionId of questionIds) {
       const question = this.questionMap.get(questionId);
