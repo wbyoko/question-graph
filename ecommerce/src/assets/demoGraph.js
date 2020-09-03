@@ -116,8 +116,8 @@ demoGraph.addEdge("food_2", "woah", ({ food }) => {
 demoGraph.addEdge("food_3", "livingLife", ({ food }) => {
   if (food != null) {
     let count = 0;
-    for (const entry of food) {
-      if (entry[1]) count++;
+    for (const key of Object.keys(food)) {
+      if (food[key]) count++;
     }
     return count > 1;
   }
