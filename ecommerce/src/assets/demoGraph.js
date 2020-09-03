@@ -224,4 +224,4 @@ console.log(demoGraph.getPossibleResultsIds({ schooling: "High School" }));
 console.log(demoGraph.getPossibleResultsIds({ playSports: true }));
 console.log(demoGraph.getPossibleResultsIds({ inCollege: true }));
 
-module.exports = { demoGraph };
+module.exports = { questionGraph: demoGraph };

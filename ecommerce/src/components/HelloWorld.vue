@@ -200,7 +200,7 @@
 </template>
 
 <script>
-import { benefitsGraph } from "../assets/benefitsGraph";
+import { questionGraph } from "../assets/benefitsGraph";
 
 export default {
   name: "HelloWorld",
@@ -218,13 +218,13 @@ export default {
 
   computed: {
     remainingQuestions: function () {
-      return benefitsGraph.getRemainingQuestions(this.data);
+      return questionGraph.getRemainingQuestions(this.data);
     },
     possibleResults: function () {
-      return benefitsGraph.getPossibleResults(this.data);
+      return questionGraph.getPossibleResults(this.data);
     },
     completedQuestions: function () {
-      return benefitsGraph.getCompletedQuestions(this.data);
+      return questionGraph.getCompletedQuestions(this.data);
     },
   },
   methods: {

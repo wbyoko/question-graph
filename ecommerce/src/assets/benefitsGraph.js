@@ -150,4 +150,4 @@ for (const edge of edgeJson) {
 console.log('benefitsGraph loaded', benefitsGraph);
 benefitsGraph.finalize();
 
-module.exports = { benefitsGraph };
+module.exports = { questionGraph: benefitsGraph };
