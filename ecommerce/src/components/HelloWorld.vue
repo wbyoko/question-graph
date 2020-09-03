@@ -8,7 +8,7 @@
           v-for="(currentQuestion, questionIndex) in completedQuestions"
           :key="currentQuestion.questionId"
         >
-          {{ currentQuestion.question }}
+          <div class="margin-y-1">{{ currentQuestion.question }}</div>
           <div v-if="currentQuestion.type === 'number'">
             <input
               class="usa-input margin-y-05"
@@ -27,6 +27,7 @@
               <input
                 class="usa-checkbox__input"
                 type="checkbox"
+                :checked="ui[currentQuestion.questionId] && ui[currentQuestion.questionId][choice]"
                 @click="toggleData(currentQuestion.questionId, choice)"
                 :id="'completed--questions-checkbox-' + questionIndex + '-' + index"
               />
@@ -92,7 +93,7 @@
           v-for="(currentQuestion, questionIndex) in remainingQuestions"
           :key="currentQuestion.questionId"
         >
-          {{ currentQuestion.question.question }}
+          <div class="margin-y-1">{{ currentQuestion.question.question }}</div>
           <div v-if="currentQuestion.question.type === 'number'">
             <input
               class="usa-input margin-y-05"
@@ -111,6 +112,7 @@
               <input
                 class="usa-checkbox__input"
                 type="checkbox"
+                :checked="ui[currentQuestion.questionId] && ui[currentQuestion.questionId][choice]"
                 @click="toggleData(currentQuestion.questionId, choice)"
                 :id="'remainingQuestions-checkbox-' + questionIndex + '-' + index"
               />
@@ -179,13 +181,13 @@
             >
               <div class="usa-card__container">
                 <header class="usa-card__header">
-                  <h2 class="usa-card__heading">{{ result.result.data.label }}</h2>
+                  <h2 class="usa-card__heading">{{ result.result.data.name }}</h2>
                 </header>
                 <div class="usa-card__body" v-if="result.result.data.description">
                   <p>{{ result.result.data.description }}</p>
                 </div>
-                <div class="usa-card__footer" v-if="result.result.data.link">
-                  <button class="usa-button">Visit Florida Keys</button>
+                <div class="usa-card__footer" v-if="result.result.data.url">
+                  <a :href="result.result.data.url" target="_blank" class="usa-button">Learn More</a>
                 </div>
               </div>
             </div>
