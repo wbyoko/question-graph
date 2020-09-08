@@ -1,98 +1,9 @@
 <template>
   <div class="grid-container">
     <div class="grid-row">
-      <div class="grid-col-4">
-        <h2>Questions</h2>
-        <div
-          class="margin-y-2"
-          v-for="(currentQuestion, questionIndex) in completedQuestions"
-          :key="currentQuestion.questionId"
-        >
-          <div class="margin-y-1">{{ currentQuestion.question }}</div>
-          <div v-if="currentQuestion.type === 'number'">
-            <input
-              class="usa-input margin-y-05"
-              type="text"
-              v-model.number="ui[currentQuestion.questionId]"
-              :id="'completed--questions-checkbox-' + currentQuestion.questionId"
-            />
-            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId)">Update</button>
-          </div>
-          <div v-else-if="currentQuestion.type === 'multi-choice'">
-            <div
-              class="usa-checkbox"
-              v-for="(choice, index) in currentQuestion.choice"
-              :key="choice"
-            >
-              <input
-                class="usa-checkbox__input"
-                type="checkbox"
-                :checked="ui[currentQuestion.questionId] && ui[currentQuestion.questionId][choice]"
-                @click="toggleData(currentQuestion.questionId, choice)"
-                :id="'completed--questions-checkbox-' + questionIndex + '-' + index"
-              />
-              <label
-                class="usa-checkbox__label"
-                :for="'completed--questions-checkbox-' + questionIndex + '-' + index"
-              >{{ choice }}</label>
-            </div>
-            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId)">Update</button>
-          </div>
-          <div v-else-if="currentQuestion.type === 'choice'">
-            <div class="usa-radio" v-for="(choice, index) in currentQuestion.choice" :key="choice">
-              <input
-                class="usa-radio__input"
-                type="radio"
-                :id="'completed--questions-radio-' + questionIndex + '-' + index"
-                :checked="data[currentQuestion.questionId] === choice"
-                @click="addAnswer(currentQuestion.questionId, choice)"
-              />
-              <label
-                class="usa-radio__label"
-                :for="'completed--questions-radio-' + questionIndex + '-' + index"
-              >{{ choice }}</label>
-            </div>
-          </div>
-          <div v-else>
-            <div class="usa-radio">
-              <input
-                class="usa-radio__input"
-                type="radio"
-                :id="'completed--questions-radio-' + questionIndex + '-yes'"
-                :checked="data[currentQuestion.questionId] === true"
-                @click="addAnswer(currentQuestion.questionId, true)"
-              />
-              <label
-                class="usa-radio__label"
-                :for="'completed--questions-radio-' + questionIndex + '-yes'"
-              >Yes</label>
-            </div>
-            <div class="usa-radio">
-              <input
-                class="usa-radio__input"
-                type="radio"
-                :checked="data[currentQuestion.questionId] === false"
-                :id="'completed--questions-radio-' + questionIndex + '-no'"
-                @click="addAnswer(currentQuestion.questionId, false)"
-              />
-              <label
-                class="usa-radio__label"
-                :for="'completed--questions-radio-' + questionIndex + '-no'"
-              >No</label>
-            </div>
-          </div>
-
-          <button
-            class="usa-button usa-button--unstyled"
-            @click="clearAnswer(currentQuestion.questionId)"
-          >clear</button>
-        </div>
-
-        <div
-          class="margin-y-2"
-          v-for="(currentQuestion, questionIndex) in remainingQuestions"
-          :key="currentQuestion.questionId"
-        >
+      <div class="grid-offset-3 grid-col-6 margin-y-2">
+        <div v-if="currentQuestion" id="questions">
+          <h2>Questions</h2>
           <div class="margin-y-1">{{ currentQuestion.question.question }}</div>
           <div v-if="currentQuestion.question.type === 'number'">
             <input
@@ -101,7 +12,6 @@
               v-model.number="ui[currentQuestion.questionId]"
               :id="'remainingQuestions-checkbox-' + currentQuestion.questionId"
             />
-            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId)">Update</button>
           </div>
           <div v-else-if="currentQuestion.question.type === 'multi-choice'">
             <div
@@ -121,7 +31,6 @@
                 :for="'remainingQuestions-checkbox-' + questionIndex + '-' + index"
               >{{ choice }}</label>
             </div>
-            <button class="usa-button" @click="updateAnswer(currentQuestion.questionId, {})">Update</button>
           </div>
           <div v-else-if="currentQuestion.question.type === 'choice'">
             <div
@@ -132,8 +41,9 @@
               <input
                 class="usa-radio__input"
                 type="radio"
+                v-model="ui[currentQuestion.questionId]"
+                :value="choice"
                 :id="'remainingQuestions-radio-' + questionIndex + '-' + index"
-                @click="addAnswer(currentQuestion.questionId, choice)"
               />
               <label
                 class="usa-radio__label"
@@ -146,8 +56,9 @@
               <input
                 class="usa-radio__input"
                 type="radio"
+                v-model="ui[currentQuestion.questionId]"
+                :value="true"
                 :id="'remainingQuestions-radio-' + questionIndex + '-yes'"
-                @click="addAnswer(currentQuestion.questionId, true)"
               />
               <label
                 class="usa-radio__label"
@@ -158,8 +69,9 @@
               <input
                 class="usa-radio__input"
                 type="radio"
+                v-model="ui[currentQuestion.questionId]"
+                :value="false"
                 :id="'remainingQuestions-radio-' + questionIndex + '-no'"
-                @click="addAnswer(currentQuestion.questionId, false)"
               />
               <label
                 class="usa-radio__label"
@@ -168,11 +80,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="grid-col-8">
-        <h2>Benefits</h2>
-
-        <div>
+        <div v-else>
+          <h2>Benefits</h2>
           <div v-if="possibleResults.length">
             <div
               class="usa-card margin-y-1"
@@ -196,14 +105,35 @@
         </div>
       </div>
     </div>
+
+    <div class="grid-row">
+      <div class="grid-offset-3 grid-col-6 margin-y-2">
+        <ul class="usa-button-group">
+          <li class="usa-button-group__item">
+            <button
+              class="usa-button usa-button--outline"
+              :disabled="!insertionOrder.length"
+              @click="goBack()"
+            >Back</button>
+          </li>
+          <li class="usa-button-group__item" v-if="currentQuestion">
+            <button
+              class="usa-button"
+              @click="updateAnswer(currentQuestion.questionId, currentQuestion.question.type === 'multi-choice' && {})"
+              :disabled="ui[currentQuestion.questionId] == null"
+            >Next</button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { questionGraph } from "../graph/benefitsGraph";
+import { questionGraph } from "../../graph/benefitsGraph";
 
 export default {
-  name: "HelloWorld",
+  name: "App",
   data() {
     return {
       ui: {},
@@ -217,14 +147,11 @@ export default {
   },
 
   computed: {
-    remainingQuestions: function () {
-      return questionGraph.getRemainingQuestions(this.data);
+    currentQuestion: function () {
+      return questionGraph.getNextQuestion(this.data);
     },
     possibleResults: function () {
       return questionGraph.getPossibleResults(this.data);
-    },
-    completedQuestions: function () {
-      return questionGraph.getCompletedQuestions(this.data);
     },
   },
   methods: {
@@ -266,4 +193,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+</style>

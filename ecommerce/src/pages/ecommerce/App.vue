@@ -200,10 +200,10 @@
 </template>
 
 <script>
-import { questionGraph } from "../graph/benefitsGraph";
+import { questionGraph } from "../../graph/benefitsGraph";
 
 export default {
-  name: "HelloWorld",
+  name: "App",
   data() {
     return {
       ui: {},
@@ -267,3 +267,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
+
