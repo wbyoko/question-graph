@@ -81,7 +81,7 @@
           </div>
         </div>
         <div v-else>
-          <h2>Benefits</h2>
+          <h2>Benefits ({{possibleResults.length}})</h2>
           <div v-if="possibleResults.length">
             <div
               class="usa-card margin-y-1"
@@ -127,12 +127,10 @@
       </div>
     </div>
 
-    <div class="grid-row">
+    <div class="grid-row" v-if="currentQuestion">
       <div class="grid-offset-3 grid-col-6 margin-y-2">
         <h4>{{futureResults.length}} possible results</h4>
-        <h4
-          v-if="currentQuestion"
-        >{{futureQuestions.length - (ui[currentQuestion.questionId] == null ? 1: 0)}} remaining questions</h4>
+        <h4>{{futureQuestions.length - (ui[currentQuestion.questionId] == null ? 1: 0)}} remaining questions</h4>
       </div>
     </div>
   </div>
