@@ -126,6 +126,15 @@
         </ul>
       </div>
     </div>
+
+    <div class="grid-row">
+      <div class="grid-offset-3 grid-col-6 margin-y-2">
+        <h4>{{futureResults.length}} possible results</h4>
+        <h4
+          v-if="currentQuestion"
+        >{{futureQuestions.length - (ui[currentQuestion.questionId] == null ? 1: 0)}} remaining questions</h4>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -153,20 +162,25 @@ export default {
     possibleResults: function () {
       return questionGraph.getPossibleResults(this.data);
     },
+    futureQuestions: function () {
+      return questionGraph.getRemainingQuestions(this.ui);
+    },
+    futureResults: function () {
+      return questionGraph.getPossibleResults(this.ui);
+    },
   },
   methods: {
     addAnswer: function (questionId, answer) {
       const newData = { ...this.data, [questionId]: answer };
       this.data = newData;
+      this.ui = { ...newData };
       this.insertionOrder.push(questionId);
-      this.ui[questionId] = answer;
-      this.ui = { ...this.ui };
     },
     clearAnswer: function (questionId) {
       const newData = { ...this.data };
       delete newData[questionId];
-      delete this.ui[questionId];
       this.data = newData;
+      this.ui = { ...newData };
       const found = this.insertionOrder.indexOf(questionId);
       if (found !== -1) {
         this.insertionOrder = this.insertionOrder.slice(found, 1);
