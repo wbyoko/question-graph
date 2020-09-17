@@ -9,8 +9,6 @@ function isString(s) {
     return typeof s === "string";
 }
 
-
-
 const benefitResultsCSV = `done,identifier,provider,agency,name,url
 x,parentBenefit,Federal Government,Social Security,Parent's benefits,https://www.ssa.gov/forms/ssa-7.html
 x,widowersBenefit,Federal Government,Social Security,Widow(er) or surviving divorced spouse benefits,https://www.ssa.gov/forms/ssa-10.html
@@ -61,9 +59,11 @@ serviceMember,Is the deceased was an active service member?,yes/no,,
 veteran,Is the deceased a Veteran?,yes/no,,`;
 
 const edgesCSV = `from,to,when
+,,
 work,relationship_work,work
 veteran,relationship_veteran,veteran
 serviceMember,relationship_serviceMember,serviceMember
+,,
 relationship_work,age_parent_work,relationship['Parent'] 
 age_parent_work,dependant_over62_parent_work,age > 62
 dependant_over62_parent_work,parentBenefit,dependant
@@ -126,8 +126,8 @@ serviceInjury_spouse_veteran,dependencyIndemnityCompensation,serviceInjury
 relationship_veteran,age_child_veteran,relationship['Child']
 age_child_veteran,unmarried_under18_child_veteran,age < 18
 unmarried_under18_child_veteran,survivingSpouseDIC_child_veteran,unmarried
-survivingSpouseDIC_child_veteran,serviceInjury_noSurvivingBenfits_child_veteran,!survivingSpouseDIC
-serviceInjury_noSurvivingBenfits_child_veteran,dependencyIndemnityCompensation,serviceInjury
+survivingSpouseDIC_child_veteran,serviceInjury_noSurvivingBenefits_child_veteran,!survivingSpouseDIC
+serviceInjury_noSurvivingBenefits_child_veteran,dependencyIndemnityCompensation,serviceInjury
 age_child_veteran,studentAtVASchool_under23_child_veteran,age < 23
 studentAtVASchool_under23_child_veteran,unmarried_studentVA_under23_child_veteran,studentAtVASchool
 unmarried_studentVA_under23_child_veteran,survivingSpouseDIC_child_veteran,unmarried
@@ -141,7 +141,41 @@ disabledBefore18_over18_child_veteran,unmarried_disabled_over18_child_veteran,di
 unmarried_disabled_over18_child_veteran,survivorsPension,unmarried
 age_child_veteran,studentAtVASchool_18-23_child_veteran,age <= 23 && age >=18
 studentAtVASchool_18-23_child_veteran,unmarried_student_18-23_child_veteran,studentAtVASchool
-unmarried_student_18-23_child_veteran,survivorsPension,unmarried`;
+unmarried_student_18-23_child_veteran,survivorsPension,unmarried
+,,
+serviceMember,dodDeathGratuity,serviceMember
+serviceMember,bereavementCounseling,serviceMember
+serviceMember,vaLifeInsurance,serviceMember
+,,
+relationship_serviceMember,dodHomeownerAssistanceProgram,relationship['Spouse'] 
+relationship_serviceMember,homeLoan,relationship['Spouse'] 
+,,
+relationship_serviceMember,lineOfDuty_parent_serviceMember,relationship['Parent'] 
+lineOfDuty_parent_serviceMember,dependencyIndemnityCompensation,lineOfDuty
+relationship_serviceMember,lineOfDuty_spouse_serviceMember,relationship['Spouse'] 
+lineOfDuty_spouse_serviceMember,dependencyIndemnityCompensation,lineOfDuty
+relationship_serviceMember,age_child_serviceMember,relationship['Child']
+age_child_serviceMember,unmarried_under18_child_serviceMember,age < 18
+unmarried_under18_child_serviceMember,survivingSpouseDIC_child_serviceMember,unmarried
+survivingSpouseDIC_child_serviceMember,lineOfDuty_noSurvivingBenefits_child_serviceMember,!survivingSpouseDIC
+lineOfDuty_noSurvivingBenefits_child_serviceMember,dependencyIndemnityCompensation,lineOfDuty
+age_child_serviceMember,higherEducation_18-23_child_serviceMember,age <= 23 && age >=18
+higherEducation_18-23_child_serviceMember,unmarried_higherEducation_18-23_child_serviceMember,higherEducation
+unmarried_higherEducation_18-23_child_serviceMember,survivingSpouseDIC_child_serviceMember,unmarried
+,,
+lineOfDuty_spouse_serviceMember,educationalBenefit,lineOfDuty
+relationship_serviceMember,lineOfDuty_child_serviceMember,relationship['Child']
+lineOfDuty_child_serviceMember,educationalBenefit,lineOfDuty
+,,
+relationship_serviceMember,age_spouse_serviceMember,relationship['Spouse'] 
+age_spouse_serviceMember,dodSurvivorBenefitPlan,age >= 55
+unmarried_under18_child_serviceMember,dodSurvivorBenefitPlan,unmarried
+age_child_serviceMember,disabledBefore18_over18_child_serviceMember,age >= 18
+disabledBefore18_over18_child_serviceMember,unmarried_disabled_over18_child_serviceMember,disabledBefore18
+unmarried_disabled_over18_child_serviceMember,dodSurvivorBenefitPlan,unmarried
+age_child_serviceMember,higherEducation_18-22_child_serviceMember,age <= 22 && age >=18
+higherEducation_18-22_child_serviceMember,unmarried_higherEducation_18-22_child_serviceMember,higherEducation
+unmarried_higherEducation_18-22_child_serviceMember,dodSurvivorBenefitPlan,unmarried`;
 
 const benefitJson = csvjson.toObject(benefitResultsCSV, csvOptions);
 const questionJson = csvjson.toObject(questionsCSV, csvOptions);
